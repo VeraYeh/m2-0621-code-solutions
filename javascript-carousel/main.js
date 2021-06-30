@@ -40,15 +40,15 @@ function switchImage() {
 
   for (let j = 0; j < $dot.length; j++) {
     if ($viewNumber.toString() === $dot[j].getAttribute('index')) {
-      $dot[j].setAttribute('class', 'dot fas fa-circle')
+      $dot[j].className = 'dot fas fa-circle';
     } else {
-      $dot[j].setAttribute('class', 'dot far fa-circle')
+      $dot[j].className = 'dot far fa-circle';
     }
   }
 }
 
 function autoRun() {
-  if ($viewNumber === 5) {
+  if ($viewNumber === images.length) {
     $viewNumber = 0;
   };
   $viewNumber++;
@@ -58,14 +58,14 @@ function autoRun() {
 $leftAngle.addEventListener('click', function(event) {
   $viewNumber--;
   if ($viewNumber < 1) {
-    $viewNumber = 5;
+    $viewNumber = images.length;
   };
   switchImage();
 })
 
 $rightAngle.addEventListener('click', function(event) {
   $viewNumber++;
-  if ($viewNumber > 5) {
+  if ($viewNumber > images.length) {
     $viewNumber = 1;
   };
   switchImage();

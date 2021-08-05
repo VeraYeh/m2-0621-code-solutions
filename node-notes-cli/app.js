@@ -15,7 +15,12 @@ function command() {
     delete data.notes[process.argv[3]];
   }
   if (process.argv[2] === 'update') {
-    data.notes[process.argv[3]] = process.argv[4];
+    if (data.notes[process.argv[3]]) {
+      data.notes[process.argv[3]] = process.argv[4];
+    } else {
+      console.log('No mathching note ID is found.')
+    }
+
   }
   fs.writeFile('data.json', JSON.stringify(data, null, 2), (err) => {
     if (err) throw err;

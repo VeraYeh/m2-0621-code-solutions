@@ -2,7 +2,8 @@ const express = require('express');
 const app = express();
 const data = require('./data.json');
 let noteObj = {};
-const fs = require('fs')
+const fs = require('fs');
+const { SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION } = require('constants');
 
 app.listen(3000, () => {
   console.log('Listening on port 3000!');
@@ -20,9 +21,8 @@ app.get('/api/notes', (req, res) => {
 // 2) Clients can GET a single note by id.
 app.get('/api/notes/:id', (req, res) => {
   const requestID = req.params.id;
-
   // if requested id not a positive integer
-  if (isNaN(requestID) || Number(requestID) <= 0) {
+  if (isNaN(requestID) || Number(requestID) <= 0 || !(Number.isInteger(requestID / 1))) {
     noteObj = { error: 'id must be a positive integer' };
     res.status(400).json(noteObj);
     return;
@@ -72,9 +72,10 @@ app.post('/api/notes/', (req, res) => {
 app.delete('/api/notes/:id', (req, res) => {
   const requestID = req.params.id;
   //If client does not specify a valid id (a positive integer), 400 response
-  if (isNaN(requestID) || Number(requestID) <= 0) {
+  if (isNaN(requestID) || Number(requestID) <= 0 || !(Number.isInteger(requestID / 1))) {
     noteObj = { error: 'id must be a positive integer' };
     res.status(400).json(noteObj);
+    return;
   }
 
   //If specified a valid id, but the matching note does not exist, 404 response
@@ -103,9 +104,10 @@ app.put('/api/notes/:id', (req, res) => {
   const requestID = req.params.id;
 
   //If client does not specify a valid id (a positive integer) OR a content property, 400 sponse
-  if (isNaN(requestID) || Number(requestID) <= 0) {
+  if (isNaN(requestID) || Number(requestID) <= 0 || !(Number.isInteger(requestID / 1))) {
     noteObj = { error: 'id must be a positive integer' };
     res.status(400).json(noteObj);
+    return;
   } else if (!('content' in req.body) || !(req.body['content'])) {
     noteObj = { error: 'content is a required field' };
     res.status(400).json(noteObj);
